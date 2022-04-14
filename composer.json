@@ -3,13 +3,6 @@
     "description": "Packages untuk memecah fitur dalam project menjadi module pecahan",
     "type": "library",
     "license": "MIT",
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Swamsid\\Smodules\\src\\ModuleServiceProvinder"
-            ]
-        }
-    },
     "autoload": {
         "psr-4": {
             "Swamsid\\Smodules\\": "src/"
