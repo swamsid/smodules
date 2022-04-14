@@ -60,7 +60,7 @@ class makeModuleCommand extends Command
         }
         $pathCreated = rtrim($pathCreated, DIRECTORY_SEPARATOR);
 
-        $this->info('Inisialisasi modul ' . $pathCreated);
+        $this->info('Inisialisasi modul ' . $pathCreated .'...');
 
         // validate is module exist
         $parentName = ucfirst($arguments[0]);
@@ -73,7 +73,7 @@ class makeModuleCommand extends Command
             $this->generateSpecificModule($pathCreated, $path, $nameSpace);
         }
 
-        $this->info("\nModul berhasil dibuat => url => " . $pathCreated);
+        $this->info("\nModul berhasil dibuat => url => modules/" . strtolower(str_replace('\\', '/', $pathCreated)));
     }
 
     public function generateDefaultModule($pathCreated, $path, $nameSpace, $parentModuleName, $childModuleName)
@@ -98,7 +98,8 @@ class makeModuleCommand extends Command
             $tempContent = str_replace('__defaultNamespace__', str_replace(DIRECTORY_SEPARATOR, '\\', $nameSpace), $tempContent);
             $tempContent = str_replace('__childModuleName__', $childModuleName, $tempContent);
             file_put_contents($moduleControllerPath, $tempContent);
-            $this->info('Controllers copied ' . $pathCreated);
+
+            $this->info("\nControllers copied success...");
 
         // copy models
             if (!is_dir($modulePath . 'Models')) {
@@ -114,7 +115,8 @@ class makeModuleCommand extends Command
             $tempContent = str_replace('__childModuleName__', $childModuleName, $tempContent);
             $tempContent = str_replace('__childModuleNameLC__', strtolower($childModuleName), $tempContent);
             file_put_contents($modelStubPath, $tempContent);
-            $this->info('Models copied ' . $pathCreated);
+
+            $this->info('Models copied success...');
 
         // copy route-service-provider
             if (!is_dir($modulePath . 'Providers')) {
@@ -135,7 +137,7 @@ class makeModuleCommand extends Command
             
             file_put_contents($moduleRouteServiceProviderPath, $tempContent);
 
-            $this->info('Providers copied ' . $pathCreated);
+            $this->info('Providers copied success...');
 
         // copy form request
             if (!is_dir($modulePath . 'Requests')) {
@@ -160,7 +162,7 @@ class makeModuleCommand extends Command
                 }
                 closedir($requestDirectory);
             }
-            $this->info('Request copied ' . $pathCreated);
+            $this->info('Request copied success...');
 
         // copy route-api and route-web
             if (!is_dir($modulePath . 'Routes')) {
@@ -193,7 +195,7 @@ class makeModuleCommand extends Command
             $tempContent = str_replace('__parentModuleNameLC__', strtolower($parentModuleName), $tempContent);
             file_put_contents($moduleRouteWeb, $tempContent);
 
-            $this->info('Routes copied ' . $pathCreated);
+            $this->info('Routes copied success...');
 
         // copy index.blade
             if (!is_dir($modulePath . 'Views')) {
@@ -206,7 +208,7 @@ class makeModuleCommand extends Command
                 $stubPath . 'Views' . DIRECTORY_SEPARATOR . 'index.blade.php',
                 $moduleBladePath
             );
-            $this->info('Views copied ' . $pathCreated . "\n");
+            $this->info('Views copied success... ');
 
             return false;
     }
