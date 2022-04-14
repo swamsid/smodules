@@ -1,6 +1,6 @@
 <?php
 
-namespace Swamsid\SModules;
+namespace Swamsid\Smodules;
 
 use Illuminate\Support\ServiceProvider;
 use Swamsid\Smodules\Commands\initModuleCommand;
