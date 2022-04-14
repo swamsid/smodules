@@ -6,7 +6,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Swamsid\\Smodules\\ModuleServiceProvinder"
+                "Swamsid\\Smodules\\src\\ModuleServiceProvinder"
             ]
         }
     },
