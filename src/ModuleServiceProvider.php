@@ -19,7 +19,7 @@ class ModuleServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap services.
+     * Bootstrap services. for booting function
      *
      * @return void
      */
