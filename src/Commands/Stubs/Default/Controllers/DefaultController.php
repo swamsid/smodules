@@ -8,6 +8,8 @@ use __defaultNamespace__\Requests\UpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use Log;
+
 class __childModuleName__Controller extends Controller
 {
 
@@ -19,7 +21,7 @@ class __childModuleName__Controller extends Controller
 
             // your code here
             
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
             Log::error('__moduleName__Controller@index => '.$th);
             
@@ -38,7 +40,7 @@ class __childModuleName__Controller extends Controller
 
             // your code here
             
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
             Log::error('__moduleName__Controller@show => '.$th);
             
@@ -59,7 +61,7 @@ class __childModuleName__Controller extends Controller
 
             DB::commit();
             
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
             Log::error('__moduleName__Controller@store => '.$th);
             
@@ -80,7 +82,7 @@ class __childModuleName__Controller extends Controller
 
             DB::commit();
             
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
             Log::error('__moduleName__Controller@update => '.$th);
             
@@ -101,7 +103,7 @@ class __childModuleName__Controller extends Controller
 
             DB::commit();
             
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
             Log::error('__moduleName__Controller@destroy => '.$th);
             
