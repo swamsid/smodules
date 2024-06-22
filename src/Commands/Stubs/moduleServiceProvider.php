@@ -31,8 +31,12 @@ class moduleServiceProvider extends ServiceProvider
         foreach($filesystem as $modules){
             $moduleName = last(explode(DIRECTORY_SEPARATOR, $modules));
             $viewPath = app_path() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'Views';
+            
             if(is_dir($viewPath)) {
-                $this->loadViewsFrom($viewPath, $moduleName);
+                $modulesViewName = substr(strtolower(last(explode('Modules', $modules))), 1);
+
+                // return var_dump($modulesViewName);
+                $this->loadViewsFrom($viewPath, $modulesViewName);
             }else{
                 $this->initiateModules($path . DIRECTORY_SEPARATOR . $moduleName);
             }
