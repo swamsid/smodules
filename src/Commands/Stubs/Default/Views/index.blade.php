@@ -22,7 +22,7 @@
     </head>
     <body class="antialiased" >
         <div class="ml-4 text-center text-sm text-gray-500 sm:ml-0" style="margin-top: 300px; font-size: 24pt;">
-            Hai
+            hello world ! ini adalah halaman modul __moduleNameReal__
         </div>
     </body>
 </html>

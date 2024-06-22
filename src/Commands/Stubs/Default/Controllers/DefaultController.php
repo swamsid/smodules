@@ -21,7 +21,7 @@ class __childModuleName__Controller extends Controller
             
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error(__childModuleName__Controller.'@index => '.$th);
+            Log::error('__moduleName__Controller@index => '.$th);
             
             return response()->json([
                 'status'    => 'error',
@@ -40,7 +40,7 @@ class __childModuleName__Controller extends Controller
             
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error(__childModuleName__Controller.'@show => '.$th);
+            Log::error('__moduleName__Controller@show => '.$th);
             
             return response()->json([
                 'status'    => 'error',
@@ -61,7 +61,7 @@ class __childModuleName__Controller extends Controller
             
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error(__childModuleName__Controller.'@store => '.$th);
+            Log::error('__moduleName__Controller@store => '.$th);
             
             return response()->json([
                 'status'    => 'error',
@@ -82,7 +82,7 @@ class __childModuleName__Controller extends Controller
             
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error(__childModuleName__Controller.'@update => '.$th);
+            Log::error('__moduleName__Controller@update => '.$th);
             
             return response()->json([
                 'status'    => 'error',
@@ -103,7 +103,7 @@ class __childModuleName__Controller extends Controller
             
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error(__childModuleName__Controller.'@destroy => '.$th);
+            Log::error('__moduleName__Controller@destroy => '.$th);
             
             return response()->json([
                 'status'    => 'error',

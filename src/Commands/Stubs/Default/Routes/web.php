@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get(strtolower('modules/__parentModuleNameLC__/__childModuleNameLC__'), function(){
-    return view('__childModuleName__::index');
+Route::get('modules/__moduleName__', function(){
+    return view('__moduleNameReal__::index');
 });

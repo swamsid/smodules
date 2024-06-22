@@ -31,53 +31,56 @@ class makeModuleCommand extends Command
 
         // validate argument
         $arguments = explode(DIRECTORY_SEPARATOR, $tempArgument);
-        if (count($arguments) != 2) {
-            $this->info('Argumen kurang sesuai, gunakan format : ParentName/ChildName');
-            return false;
-        }
-
-        // validate duplicate module name
-        if (file_exists($path . DIRECTORY_SEPARATOR . $tempArgument)) {
-            $this->info("Modul \"" . $this->argument('name') . "\" sudah ada, gunakan nama yang berbeda \n");
+        if (count($arguments) > 5) {
+            $this->info('Folder modules tidak boleh melebih 5 subfolder contoh : ParentName/sub_1/sub_2/sub_3/sub_4');
             return false;
         }
 
         // inisialisasi path
-        $pathCreated = '';
+        $pathCreated    = '';
+        $fullCheckPath  = $path . DIRECTORY_SEPARATOR . $tempArgument;
+
+        // $this->info(count(scandir($fullCheckPath)));
+        
+        if(file_exists($fullCheckPath)){
+            if(file_exists($fullCheckPath . DIRECTORY_SEPARATOR . 'Providers')){
+                $this->info('Module ini sudah ada !');
+                return false;
+            }else if((count(scandir($fullCheckPath)) > 0)){
+                $this->info('folder memiliki sub folder. tidak bisa digunakan sebagai module !');
+                return false;
+            }
+        }
+
         foreach ($arguments as $key => $argument) {
             $pathCreated .= ucfirst($argument);
             $fullPath = $path . DIRECTORY_SEPARATOR . $pathCreated;
-
+            
             if (!file_exists($fullPath)) {
                 mkdir($fullPath);
             } else {
                 if (is_dir($fullPath . '/Providers')) {
-                    $this->info('\"' . $fullPath . '\" sudah digunakan, gunakan struktur modul yang berbeda');
+                    $this->info('Folder "' . $pathCreated . '" merupakan sebuah nama modul, silahkan gunakan folder yang berbeda !');
                     return false;
                 }
             }
+
             $pathCreated .= DIRECTORY_SEPARATOR;
         }
+
         $pathCreated = rtrim($pathCreated, DIRECTORY_SEPARATOR);
 
         $this->info('Inisialisasi modul ' . $pathCreated .'...');
 
-        // validate is module exist
-        $parentName = ucfirst($arguments[0]);
-        $childName = ucfirst($arguments[1]);
-        if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'Stubs' . DIRECTORY_SEPARATOR . $parentName . DIRECTORY_SEPARATOR . $childName)) {
-            // generate default module
-            $this->generateDefaultModule($pathCreated, $path, $nameSpace, $parentName, $childName);
-        } else {
-            // generate specific module
-            $this->generateSpecificModule($pathCreated, $path, $nameSpace);
-        }
+        $this->generateDefaultModule($pathCreated, $path, $nameSpace, $tempArgument);
 
-        $this->info("\nModul berhasil dibuat => url => modules/" . strtolower(str_replace('\\', '/', $pathCreated)));
+        $this->info("\nModul berhasil dibuat => route url testing => modules/" . strtolower(str_replace('\\', '/', $pathCreated)));
     }
 
-    public function generateDefaultModule($pathCreated, $path, $nameSpace, $parentModuleName, $childModuleName)
-    {
+    public function generateDefaultModule($pathCreated, $path, $nameSpace, $moduleName)
+    {   
+        $moduleLastName = last(explode('\\', $moduleName));
+
         // stub origin path
             $stubPath = __DIR__ . DIRECTORY_SEPARATOR . 'Stubs' . DIRECTORY_SEPARATOR . 'Default' . DIRECTORY_SEPARATOR;
         // module destination path
@@ -89,14 +92,15 @@ class makeModuleCommand extends Command
             if (!is_dir($modulePath . 'Controllers')) {
                 mkdir($modulePath . 'Controllers');
             }
-            $moduleControllerPath = $modulePath . 'Controllers' . DIRECTORY_SEPARATOR . $childModuleName . 'Controller.php';
+            $moduleControllerPath = $modulePath . 'Controllers' . DIRECTORY_SEPARATOR . $moduleLastName . 'Controller.php';
             copy(
                 $stubPath . 'Controllers' . DIRECTORY_SEPARATOR . 'DefaultController.php',
                 $moduleControllerPath
             );
             $tempContent = file_get_contents($moduleControllerPath);
             $tempContent = str_replace('__defaultNamespace__', str_replace(DIRECTORY_SEPARATOR, '\\', $nameSpace), $tempContent);
-            $tempContent = str_replace('__childModuleName__', $childModuleName, $tempContent);
+            $tempContent = str_replace('__childModuleName__', $moduleLastName, $tempContent);
+            $tempContent = str_replace('__moduleName__', $moduleName.DIRECTORY_SEPARATOR.$moduleLastName, $tempContent);
             file_put_contents($moduleControllerPath, $tempContent);
 
             $this->info("\nControllers copied success...");
@@ -105,15 +109,14 @@ class makeModuleCommand extends Command
             if (!is_dir($modulePath . 'Models')) {
                 mkdir($modulePath . 'Models');
             }
-            $modelStubPath = $modulePath . 'Models' . DIRECTORY_SEPARATOR . $childModuleName . '.php';
+            $modelStubPath = $modulePath . 'Models' . DIRECTORY_SEPARATOR . ucfirst($moduleLastName) . '.php';
             copy(
                 $stubPath . 'Models' . DIRECTORY_SEPARATOR . 'Default.php',
                 $modelStubPath
             );
             $tempContent = file_get_contents($modelStubPath);
             $tempContent = str_replace('__defaultNamespace__', str_replace(DIRECTORY_SEPARATOR, '\\', $nameSpace), $tempContent);
-            $tempContent = str_replace('__childModuleName__', $childModuleName, $tempContent);
-            $tempContent = str_replace('__childModuleNameLC__', strtolower($childModuleName), $tempContent);
+            $tempContent = str_replace('__childModuleName__', ucfirst($moduleLastName), $tempContent);
             file_put_contents($modelStubPath, $tempContent);
 
             $this->info('Models copied success...');
@@ -177,10 +180,7 @@ class makeModuleCommand extends Command
             );
             $tempContent = file_get_contents($moduleRoutePath);
             $tempContent = str_replace('__defaultNamespace__', str_replace(DIRECTORY_SEPARATOR, '\\', $nameSpace), $tempContent);
-            $tempContent = str_replace('__childModuleName__', $childModuleName, $tempContent);
-            $tempContent = str_replace('__parentModuleName__', $parentModuleName, $tempContent);
-            $tempContent = str_replace('__childModuleNameLC__', strtolower($childModuleName), $tempContent);
-            $tempContent = str_replace('__parentModuleNameLC__', strtolower($parentModuleName), $tempContent);
+            $tempContent = str_replace('__childModuleName__', $moduleLastName, $tempContent);
             file_put_contents($moduleRoutePath, $tempContent);
 
             copy(
@@ -189,10 +189,10 @@ class makeModuleCommand extends Command
             );
             $tempContent = file_get_contents($moduleRouteWeb);
             $tempContent = str_replace('__defaultNamespace__', str_replace(DIRECTORY_SEPARATOR, '\\', $nameSpace), $tempContent);
-            $tempContent = str_replace('__childModuleName__', $childModuleName, $tempContent);
-            $tempContent = str_replace('__parentModuleName__', $parentModuleName, $tempContent);
-            $tempContent = str_replace('__childModuleNameLC__', strtolower($childModuleName), $tempContent);
-            $tempContent = str_replace('__parentModuleNameLC__', strtolower($parentModuleName), $tempContent);
+            $tempContent = str_replace('__childModuleName__', $moduleLastName, $tempContent);
+            $modulesNamesLower = str_replace(DIRECTORY_SEPARATOR, '/', strtolower($moduleName)); 
+            $tempContent = str_replace('__moduleName__', $modulesNamesLower, $tempContent);
+            $tempContent = str_replace('__moduleNameReal__', strtolower($moduleName), $tempContent);
             file_put_contents($moduleRouteWeb, $tempContent);
 
             $this->info('Routes copied success...');
@@ -208,6 +208,11 @@ class makeModuleCommand extends Command
                 $stubPath . 'Views' . DIRECTORY_SEPARATOR . 'index.blade.php',
                 $moduleBladePath
             );
+
+            $tempContent = file_get_contents($moduleBladePath);; 
+            $tempContent = str_replace('__moduleNameReal__', strtolower($moduleName), $tempContent);
+            file_put_contents($moduleBladePath, $tempContent);
+
             $this->info('Views copied success... ');
 
             return false;
