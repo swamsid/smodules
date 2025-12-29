@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('modules/__moduleName__', function(){
+Route::get('module/__moduleName__', function(){
     return view('__moduleNameReal__::index');
 });

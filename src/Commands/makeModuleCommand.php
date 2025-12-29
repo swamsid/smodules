@@ -39,8 +39,6 @@ class makeModuleCommand extends Command
         // inisialisasi path
         $pathCreated    = '';
         $fullCheckPath  = $path . DIRECTORY_SEPARATOR . $tempArgument;
-
-        // $this->info(count(scandir($fullCheckPath)));
         
         if(file_exists($fullCheckPath)){
             if(file_exists($fullCheckPath . DIRECTORY_SEPARATOR . 'Providers')){
@@ -80,6 +78,7 @@ class makeModuleCommand extends Command
     public function generateDefaultModule($pathCreated, $path, $nameSpace, $moduleName)
     {   
         $moduleLastName = last(explode('\\', $moduleName));
+        $moduleNameReal = str_replace(DIRECTORY_SEPARATOR, '->', $moduleName);
 
         // stub origin path
             $stubPath = __DIR__ . DIRECTORY_SEPARATOR . 'Stubs' . DIRECTORY_SEPARATOR . 'Default' . DIRECTORY_SEPARATOR;
@@ -192,7 +191,7 @@ class makeModuleCommand extends Command
             $tempContent = str_replace('__childModuleName__', $moduleLastName, $tempContent);
             $modulesNamesLower = str_replace(DIRECTORY_SEPARATOR, '/', strtolower($moduleName)); 
             $tempContent = str_replace('__moduleName__', $modulesNamesLower, $tempContent);
-            $tempContent = str_replace('__moduleNameReal__', strtolower($moduleName), $tempContent);
+            $tempContent = str_replace('__moduleNameReal__', strtolower($moduleNameReal), $tempContent);
             file_put_contents($moduleRouteWeb, $tempContent);
 
             $this->info('Routes copied success...');
@@ -210,7 +209,7 @@ class makeModuleCommand extends Command
             );
 
             $tempContent = file_get_contents($moduleBladePath);; 
-            $tempContent = str_replace('__moduleNameReal__', strtolower($moduleName), $tempContent);
+            $tempContent = str_replace('__moduleNameReal__', strtolower($moduleNameReal), $tempContent);
             file_put_contents($moduleBladePath, $tempContent);
 
             $this->info('Views copied success... ');

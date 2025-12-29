@@ -34,8 +34,8 @@ class moduleServiceProvider extends ServiceProvider
             
             if(is_dir($viewPath)) {
                 $modulesViewName = substr(strtolower(last(explode('Modules', $modules))), 1);
+                $modulesViewName = str_replace(DIRECTORY_SEPARATOR, '->', $modulesViewName);
 
-                // return var_dump($modulesViewName);
                 $this->loadViewsFrom($viewPath, $modulesViewName);
             }else{
                 $this->initiateModules($path . DIRECTORY_SEPARATOR . $moduleName);
